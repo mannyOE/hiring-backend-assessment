@@ -1,6 +1,10 @@
-import { Body, Get, JsonController, Post } from "routing-controllers";
+import { BadRequestError, Body, JsonController, Post } from "routing-controllers";
 
-import { CarsEntity } from "../../models";
+import {
+  schema
+} from '../../validators/Cars';
+
+import { CarsEntity, RegistrationEntity } from "../../models";
 import {Vin} from '../../integrations/vin-integration'
 
 type CreateCarInputType = Pick<CarsEntity,
@@ -9,26 +13,58 @@ type CreateCarInputType = Pick<CarsEntity,
   'description'|
   'currentMileage'|
   'currentValue'|
-  'registration'|
-  'vin'|
-  'registrationState'|
-  'registrationExpires'|
-  'nameOnRegistration'
+  'vin'
 >
 
-@JsonController("/cars-entity")
-export class CarsController {
-  @Get()
-  get(): Promise<CarsEntity[]> {
-    return CarsEntity.find();
-  }
+type CreatePayload = Pick<CarsEntity,
+"licensePlate"|
+'color'|
+'description'|
+'currentMileage'|
+'currentValue'|
+'vin'|
+'year'|
+'make'|
+'model'|
+'registration'
+>
 
+interface CarInputType extends  CreateCarInputType {
+  registrationNumber: string;
+  registrationState: string;
+  nameOnRegistration: string;
+  registrationExpires: string;
+}
+
+
+
+@JsonController("/cars")
+export class CarsController {
   @Post()
-  async create(@Body() body: CreateCarInputType): Promise<CarsEntity> {
-    // using the VIN, decode to acquire the year, make and model
-    let vinIntegration = new Vin();
-    let {year, make, model} = await vinIntegration.decode(body.vin)
-    return CarsEntity.create({...body, year, make, model}).save();
+  async create(@Body() body: CarInputType): Promise<CarsEntity> {
+      // validate input data
+      let result = schema.validate(body)
+      if(result.error) {
+        throw new BadRequestError(result.error.message)
+      }else{
+        let {licensePlate,color,description,currentMileage,currentValue,vin, registrationNumber,registrationState,nameOnRegistration,registrationExpires} = body
+        // using the VIN, decode to acquire the year, make and model
+        let {year, make, model} = await Vin.decode(vin)
+        const reg = new RegistrationEntity()
+        reg.nameOnRegistration = nameOnRegistration;
+        reg.registrationNumber = registrationNumber;
+        reg.registrationExpires = new Date(registrationExpires)
+        reg.registrationState = registrationState
+
+        let payload: CreatePayload = {
+          licensePlate,color,description,currentMileage,currentValue,vin, year, make, model, registration: reg
+        }
+        const car = CarsEntity.create({...payload})
+        await reg.save();
+        await car.save();
+        return car;
+      }
+
 
   }
 }

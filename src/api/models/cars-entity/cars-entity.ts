@@ -1,7 +1,11 @@
 import {
-  BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn,
+  BaseEntity, Column, OneToOne, JoinColumn, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn,
   UpdateDateColumn
 } from "typeorm";
+
+
+
+import {RegistrationEntity} from '../registration-entity/registration-entity'
 
 @Entity("Cars")
 export class CarsEntity extends BaseEntity {
@@ -11,20 +15,18 @@ export class CarsEntity extends BaseEntity {
   @Column()
   licensePlate: string;
 
-  @Column()
-  registration: string;
-
-  @Column()
-  registrationState: string;
+  @OneToOne(()=>RegistrationEntity)
+  @JoinColumn()
+  registration: RegistrationEntity;
 
   @Column()
   vin: string;
 
   @Column()
-  currentValue: string;
+  currentValue: number;
 
   @Column()
-  currentMileage: string;
+  currentMileage: number;
 
   @Column()
   description: string;
@@ -32,11 +34,10 @@ export class CarsEntity extends BaseEntity {
   @Column()
   color: string;
 
-  @Column()
-  registrationExpires: Date;
 
   @Column()
   make: string;
+
 
   @Column()
   model: string;
@@ -44,8 +45,7 @@ export class CarsEntity extends BaseEntity {
   @Column()
   year: string;
 
-  @Column()
-  nameOnRegistration: string;
+
 
   @CreateDateColumn()
   createdDate: Date;
