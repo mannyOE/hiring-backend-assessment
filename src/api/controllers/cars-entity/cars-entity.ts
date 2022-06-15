@@ -1,7 +1,7 @@
 import { BadRequestError, Body, JsonController, Post } from "routing-controllers";
 
 import {
-  schema
+  createCarSchema
 } from '../../validators/Cars';
 
 import { CarsEntity, RegistrationEntity } from "../../models";
@@ -43,7 +43,7 @@ export class CarsController {
   @Post()
   async create(@Body() body: CarInputType): Promise<CarsEntity> {
       // validate input data
-      let result = schema.validate(body)
+      let result = createCarSchema.validate(body)
       if(result.error) {
         throw new BadRequestError(result.error.message)
       }else{

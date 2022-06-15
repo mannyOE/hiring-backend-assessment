@@ -1,7 +1,7 @@
 import joi from 'joi'
 
 
-export const schema = joi.object().keys({
+export const createCarSchema = joi.object().keys({
   licensePlate: joi.string().required(),
   color: joi.string().required(),
   description: joi.string().required(),
