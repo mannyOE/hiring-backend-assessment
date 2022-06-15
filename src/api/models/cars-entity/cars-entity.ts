@@ -36,6 +36,15 @@ export class CarsEntity extends BaseEntity {
   registrationExpires: Date;
 
   @Column()
+  make: string;
+
+  @Column()
+  model: string;
+
+  @Column()
+  year: string;
+
+  @Column()
   nameOnRegistration: string;
 
   @CreateDateColumn()
