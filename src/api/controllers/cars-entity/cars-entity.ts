@@ -50,11 +50,15 @@ export class CarsController {
         let {licensePlate,color,description,currentMileage,currentValue,vin, registrationNumber,registrationState,nameOnRegistration,registrationExpires} = body
         // using the VIN, decode to acquire the year, make and model
         let {year, make, model} = await Vin.decode(vin)
-        const reg = new RegistrationEntity()
-        reg.nameOnRegistration = nameOnRegistration;
-        reg.registrationNumber = registrationNumber;
-        reg.registrationExpires = new Date(registrationExpires)
-        reg.registrationState = registrationState
+        // check if the registrationNumber exists
+        let reg = await RegistrationEntity.findOne({registrationNumber})
+        if(!reg){
+          reg = new RegistrationEntity()
+          reg.nameOnRegistration = nameOnRegistration;
+          reg.registrationNumber = registrationNumber;
+          reg.registrationExpires = new Date(registrationExpires)
+          reg.registrationState = registrationState
+        }
 
         let payload: CreatePayload = {
           licensePlate,color,description,currentMileage,currentValue,vin, year, make, model, registration: reg

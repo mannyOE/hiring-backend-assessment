@@ -1,4 +1,8 @@
-## Template Project Setup
+## Assumptions made
+
+- Registrations are separated from the car information, but are joined many-to-one
+
+## Project Setup
 
 ### Overview
 
@@ -43,3 +47,6 @@ To bring up the environment, perform the following steps:
 3. Test the api using the following postman documentation
 
     [List a car Postman documentation](https://documenter.getpostman.com/view/3813285/UzBiR9ST)
+3. To generate a valid VIN for testing
+
+    [Generate VIN](https://vingenerator.org/)
