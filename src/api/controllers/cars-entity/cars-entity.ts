@@ -17,19 +17,19 @@ type CreateCarInputType = Pick<CarsEntity,
 >
 
 type CreatePayload = Pick<CarsEntity,
-"licensePlate"|
-'color'|
-'description'|
-'currentMileage'|
-'currentValue'|
-'vin'|
-'year'|
-'make'|
-'model'|
-'registration'
+  'licensePlate'|
+  'color'|
+  'description'|
+  'currentMileage'|
+  'currentValue'|
+  'vin'|
+  'year'|
+  'make'|
+  'model'|
+  'registration'
 >
 
-interface CarInputType extends  CreateCarInputType {
+interface CarInputType extends CreateCarInputType {
   registrationNumber: string;
   registrationState: string;
   nameOnRegistration: string;

@@ -6,8 +6,6 @@ export type VinResponse = {
   model: string
 }
 export class Vin {
-
-
   static async decode(vin: string):Promise<VinResponse>{
     let year = '', make = '', model = '';
     // make api call to decode here
